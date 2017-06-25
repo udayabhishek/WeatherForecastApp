@@ -12,6 +12,7 @@ import SwiftyJSON
 import SDWebImage
 
 class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate{
+    
     @IBOutlet weak var cityNameSearchTextField: UITextField!
     @IBOutlet weak var labelCityName: UILabel!
     @IBOutlet weak var labelTemperature: UILabel!
@@ -22,49 +23,26 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
     var day2 = [[String: Any]]()
     var day3 = [[String: Any]]()
     var day4 = [[String: Any]]()
-    func getDayOfWeek(_ today:String) -> String? {
-        let formatter  = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        guard let todayDate = formatter.date(from: today) else { return nil }
-        let myCalendar = Calendar(identifier: .gregorian)
-        let weekDay = myCalendar.component(.weekday, from: todayDate)
-        switch weekDay {
-        case 1:
-            return "Sunday"
-        case 2:
-            return "Monday"
-        case 3:
-            return "Tuesday"
-        case 4:
-            return "Wednessday"
-        case 5:
-            return "Thursday"
-        case 6:
-            return "Friday"
-        case 7:
-            return "Saturday"
-        default:
-            return ""
-        }
+
+
+
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor.init(patternImage: UIImage.init(named: "backgroundImage.png")!)
+        activityIndicator.isHidden = true
     }
-    
-    func alert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
+//    MARK:-
     @IBAction func SearchButton(_ sender: Any) {
-//                day0 = [[:]]//Today
-//                day1 = [[:]]
-//                day2 = [[:]]
-//                day3 = [[:]]
-//                day4 = [[:]]
+        //                day0 = [[:]]//Today
+        //                day1 = [[:]]
+        //                day2 = [[:]]
+        //                day3 = [[:]]
+        //                day4 = [[:]]
         let cityName = cityNameSearchTextField.text
         if cityName != nil{
-            print(cityName!)
             labelCityName.text = cityName!
-//            metric is as default
+            //            metric is as default
             let feed = getJSONData(cityName: cityName!, units: "metric")
             if feed == true{
                 
@@ -79,21 +57,19 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
     
     
     @IBAction func segmentToggleBetweenCAndF(_ sender: UISegmentedControl) {
-//        day0 = [[:]]//Today
-//        day1 = [[:]]
-//        day2 = [[:]]
-//        day3 = [[:]]
-//        day4 = [[:]]
+        //        day0 = [[:]]//Today
+        //        day1 = [[:]]
+        //        day2 = [[:]]
+        //        day3 = [[:]]
+        //        day4 = [[:]]
         let cityName = cityNameSearchTextField.text!
         if cityName.isEmpty{
             alert(title: "Oops", message: "You missed the city name")
         }else{
             switch sender.selectedSegmentIndex{
             case 0:
-                print("C")
                 _ = getJSONData(cityName: cityName, units: "metric")
             case 1:
-                print("F")
                 _ = getJSONData(cityName: cityName, units: "imperial")
             default:
                 break
@@ -101,17 +77,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
         }
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = UIColor.init(patternImage: UIImage.init(named: "backgr.png")!)
-        activityIndicator.isHidden = true
-    }
-    
+//  MARK: - Update User Interface
     func addDetailsOntoUI() {
         let degree = "°"
         let temperature = String(describing: self.day0[0]["temp"]!)
@@ -119,7 +85,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
         labelCityName.text = String(describing: self.day0[0]["cityName"]!)
         tableViewWeatherForecast.reloadData()
     }
-
+//  MARK: -  getJSON
     func getJSONData(cityName:String, units:String)->Bool{
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
@@ -129,7 +95,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
 //        for temperature in Fahrenheit use &units=imperial
         let apiKey = "a06d4ebad91f121ad6e5c698711ea0d3"
         let URL = "http://api.openweathermap.org/data/2.5/forecast?q=\(cityName)&units=\(units)&APPID=\(apiKey)"
-        print(URL)
         Alamofire.request(URL).responseJSON
         {
             response in
@@ -138,20 +103,15 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
             {
                 case .success(let value):
                     let json = JSON(value)
-                    print(json)
-                    
                     let date = Date()
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateStyle = .medium
                     dateFormatter.timeStyle = .none
                     dateFormatter.dateFormat = "yyyy-MM-dd"
-                    print(dateFormatter.string(from: date))
                     let currentDate = String(describing: dateFormatter.string(from: date))
-                    print(currentDate)
                     let statusCode = json["cod"].string!
                     if statusCode == "200"{
                         let dateList = json["list"].array
-                        print(dateList ?? "")
                         var dateString:String
                         var dateArray:[String]
                         var counter = 0
@@ -170,7 +130,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
                             dateString = String(describing: str!)
                             dateArray = dateString.components(separatedBy: " ")
                             let dateFromString = dateArray[0]
-                            print(dateFromString)
                             var tempDict : [String: Any] = [:]
                             tempDict["cityName"] = json["city"]["name"]
                             tempDict["country"] = json["city"]["country"]
@@ -238,6 +197,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
         return status
     }
     
+// MARK: - UITableViewDelegates Function
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.day0.count <= 1 {
             return 0
@@ -303,6 +264,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
         return cell
     }
     
+//    MARK: - UITableViewDataSource method
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         forecastDetails = [[:]]
         let rowNumber = indexPath.row
@@ -325,14 +288,47 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
         performSegue(withIdentifier: "segueDetailsView", sender: self)
     }
     
-//    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?){
-//        
-//        if (segue.identifier == "segueDetailsView") {
-//            // initialize new view controller and cast it as your view controller
-//            var viewController = segue.destination as! DetailsViewController
-//            // your new view controller should have property that will store passed value
-////            viewController.passedValue = valueToPass
-//        }
-//    }
+//    MARK: - Helper Functions
+    
+    func getDayOfWeek(_ today:String) -> String? {
+        let formatter  = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        guard let todayDate = formatter.date(from: today) else { return nil }
+        let myCalendar = Calendar(identifier: .gregorian)
+        let weekDay = myCalendar.component(.weekday, from: todayDate)
+        switch weekDay {
+        case 1:
+            return "Sunday"
+        case 2:
+            return "Monday"
+        case 3:
+            return "Tuesday"
+        case 4:
+            return "Wednessday"
+        case 5:
+            return "Thursday"
+        case 6:
+            return "Friday"
+        case 7:
+            return "Saturday"
+        default:
+            return ""
+        }
+    }
+    
+    func alert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+//    MARK - UITextFieldDelegate Function
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+
 }
 
