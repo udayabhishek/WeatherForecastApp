@@ -13,39 +13,44 @@ import SDWebImage
 
 class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate{
     
+    @IBOutlet weak var viewWeather: UIView!
     @IBOutlet weak var cityNameSearchTextField: UITextField!
     @IBOutlet weak var labelCityName: UILabel!
     @IBOutlet weak var labelTemperature: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var tableViewWeatherForecast: UITableView!
+   
+    @IBOutlet weak var segmentControl: UISegmentedControl!
+    var tempDict : [String: Any] = [:]
     var day0 = [[String: Any]]()//Today
     var day1 = [[String: Any]]()
     var day2 = [[String: Any]]()
     var day3 = [[String: Any]]()
     var day4 = [[String: Any]]()
 
-
-
-
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        hideViews()
+        segmentControl.isHidden = true
         view.backgroundColor = UIColor.init(patternImage: UIImage.init(named: "backgroundImage.png")!)
         activityIndicator.isHidden = true
     }
-//    MARK:-
+    
+//    MARK: - User Input
     @IBAction func SearchButton(_ sender: Any) {
-        //                day0 = [[:]]//Today
-        //                day1 = [[:]]
-        //                day2 = [[:]]
-        //                day3 = [[:]]
-        //                day4 = [[:]]
+//                        day0 = [[:]]//Today
+//                        day1 = [[:]]
+//                        day2 = [[:]]
+//                        day3 = [[:]]
+//                        day4 = [[:]]
         let cityName = cityNameSearchTextField.text
         if cityName != nil{
-            labelCityName.text = cityName!
+//            labelCityName.text = cityName!
             //            metric is as default
             let feed = getJSONData(cityName: cityName!, units: "metric")
             if feed == true{
-                
+//                self.viewWeather.isHidden = false
             }else{
                 alert(title: "oops", message: "You missed the city name")
             }
@@ -64,6 +69,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
         //        day4 = [[:]]
         let cityName = cityNameSearchTextField.text!
         if cityName.isEmpty{
+            hideViews()
             alert(title: "Oops", message: "You missed the city name")
         }else{
             switch sender.selectedSegmentIndex{
@@ -79,13 +85,14 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
     
 //  MARK: - Update User Interface
     func addDetailsOntoUI() {
+        showViews()
         let degree = "°"
         let temperature = String(describing: self.day0[0]["temp"]!)
         labelTemperature.text = temperature + degree
         labelCityName.text = String(describing: self.day0[0]["cityName"]!)
         tableViewWeatherForecast.reloadData()
     }
-//  MARK: -  getJSON
+  
     func getJSONData(cityName:String, units:String)->Bool{
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
@@ -102,6 +109,11 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
             switch response.result
             {
                 case .success(let value):
+//                    self.day0 = [[:]]
+//                    self.day1 = [[:]]
+//                    self.day2 = [[:]]
+//                    self.day3 = [[:]]
+//                    self.day4 = [[:]]
                     let json = JSON(value)
                     let date = Date()
                     let dateFormatter = DateFormatter()
@@ -116,82 +128,87 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
                         var dateArray:[String]
                         var counter = 0
                         for item in dateList!{
-                            //                        data format
-                            //                        item["main"]["temp_min"]
-                            //                        item["main"]["temp_max"]
-                            //                        item["main"]["temp"]
-                            //                        item["dt_txt"]
-                            //                        item["dt"]
-                            //                        item["main"]["pressure"]
-                            //                        item["main"]["humidity"]
-                            //                        item["wind"]["speed"]
+//                        data format
+//                        item["main"]["temp_min"]
+//                        item["main"]["temp_max"]
+//                        item["main"]["temp"]
+//                        item["dt_txt"]
+//                        item["dt"]
+//                        item["main"]["pressure"]
+//                        item["main"]["humidity"]
+//                        item["wind"]["speed"]
                             
                             let str = item["dt_txt"].string
                             dateString = String(describing: str!)
                             dateArray = dateString.components(separatedBy: " ")
                             let dateFromString = dateArray[0]
-                            var tempDict : [String: Any] = [:]
-                            tempDict["cityName"] = json["city"]["name"]
-                            tempDict["country"] = json["city"]["country"]
+                            
+                            self.tempDict["cityName"] = json["city"]["name"]
+                            self.tempDict["country"] = json["city"]["country"]
+                           
                             if currentDate == dateFromString{
 //                            day0: Today
-                                tempDict["temp"] = item["main"]["temp"].int! //Temperature
-                                tempDict["temp_max"] = item["main"]["temp_max"].int! //Maximum Temperature
-                                tempDict["temp_min"] = item["main"]["temp_min"].int! //Minimum Temperature
-                                tempDict["dayName"] = self.getDayOfWeek(dateArray[0]) //to get name of the day
-                                tempDict["date"] = dateArray[0] //Takes only date
-                                tempDict["time"] = dateArray[1] // Taked onlt time
-                                tempDict["iconName"] =  item["weather"][0]["icon"] //Weather icon
-                                tempDict["weatherType"] = item["weather"][0]["main"] //Weather type: cloudy, rain, clear etc.
-                                tempDict["pressure"] = item["main"]["pressure"].int!//Presssure
-                                tempDict["humidity"] = item["main"]["humidity"].int!//Humidity
-                                tempDict["windSpeed"] = item["wind"]["speed"].int!//Speed of the wind
-                                tempDict["windDegree"] = item["wind"]["deg"].int!//Wind  degree
-                                self.day0.append(tempDict) //appending all temporary dictionary elements into the array of dictionary
+                                
+                                self.tempDict["temp"] = item["main"]["temp"].int! //Temperature
+                                self.tempDict["temp_max"] = item["main"]["temp_max"].int! //Maximum Temperature
+                                self.tempDict["temp_min"] = item["main"]["temp_min"].int! //Minimum Temperature
+                                self.tempDict["dayName"] = self.getDayOfWeek(dateArray[0]) //to get name of the day
+                                self.tempDict["date"] = dateArray[0] //Takes only date
+                                self.tempDict["time"] = dateArray[1] // Taked onlt time
+                                self.tempDict["iconName"] =  item["weather"][0]["icon"] //Weather icon
+                                self.tempDict["weatherType"] = item["weather"][0]["main"] //Weather type: cloudy, rain, clear etc.
+                                self.tempDict["pressure"] = item["main"]["pressure"].int!//Presssure
+                                self.tempDict["humidity"] = item["main"]["humidity"].int!//Humidity
+                                self.tempDict["windSpeed"] = item["wind"]["speed"].int!//Speed of the wind
+                                self.tempDict["windDegree"] = item["wind"]["deg"].int!//Wind  degree
+                                self.day0.append(self.tempDict) //appending all temporary dictionary elements into the array of dictionary
                             }
                             else{
 //                            Other days
-                                tempDict["temp"] = item["main"]["temp"].int!
-                                tempDict["temp_max"] = item["main"]["temp_max"].int!
-                                tempDict["temp_min"] = item["main"]["temp_min"].int!
-                                tempDict["date"] = dateArray[0]
-                                tempDict["time"] = dateArray[1]
-                                tempDict["dayName"] = self.getDayOfWeek(dateArray[0])
-                                tempDict["iconName"] =  item["weather"][0]["icon"]
-                                tempDict["weatherType"] = item["weather"][0]["main"]
-                                tempDict["pressure"] = item["main"]["pressure"].int!
-                                tempDict["humidity"] = item["main"]["humidity"].int!
-                                tempDict["windSpeed"] = item["wind"]["speed"].int!
-                                tempDict["windDegree"] = item["wind"]["deg"].int!
+                                self.tempDict["temp"] = item["main"]["temp"].int!
+                                self.tempDict["temp_max"] = item["main"]["temp_max"].int!
+                                self.tempDict["temp_min"] = item["main"]["temp_min"].int!
+                                self.tempDict["date"] = dateArray[0]
+                                self.tempDict["time"] = dateArray[1]
+                                self.tempDict["dayName"] = self.getDayOfWeek(dateArray[0])
+                                self.tempDict["iconName"] =  item["weather"][0]["icon"]
+                                self.tempDict["weatherType"] = item["weather"][0]["main"]
+                                self.tempDict["pressure"] = item["main"]["pressure"].int!
+                                self.tempDict["humidity"] = item["main"]["humidity"].int!
+                                self.tempDict["windSpeed"] = item["wind"]["speed"].int!
+                                self.tempDict["windDegree"] = item["wind"]["deg"].int!
 //                            day1: Tomorrow, temperature data is for each 3 hours, so for one day 24/3 = 8times
                                 if counter >= 0 && counter < 8 {
-                                    self.day1.append(tempDict)
+                                    self.day1.append(self.tempDict)
                                     counter += 1
                                 }
 //                            day 2
                                 else if counter >= 8 && counter < 16{
-                                    self.day2.append(tempDict)
+                                    self.day2.append(self.tempDict)
                                     counter += 1
                                 }
 //                            day 3
                                 else if counter >= 16 && counter < 24{
-                                    self.day3.append(tempDict)
+                                    self.day3.append(self.tempDict)
                                     counter += 1
                                 }
 //                            day 4
                                 else if counter >= 24 && counter < 32{
-                                    self.day4.append(tempDict)
+                                    self.day4.append(self.tempDict)
                                     counter += 1
                                 }
                             }
                         }
                         self.addDetailsOntoUI()
                     }else{
+                            self.hideViews()
                             self.alert(title: "City Not Found", message: "")
                     }
                 case .failure(let error):
+                    self.hideViews()
                     status = false
-                    self.alert(title: "Oops, somthing went wrong:", message: "Reason: \(error)")
+                    print(error)
+                    self.alert(title: "Oops", message: "City Not Found")
             }
         }
         return status
@@ -210,6 +227,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        index 0 is being used for picking top element from each day's array and displaying in the table row
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         let baseURLForIcon = "http://openweathermap.org/img/w/"
 //        here index 0 is for
@@ -322,12 +340,24 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
         self.present(alert, animated: true, completion: nil)
     }
     
+    func showViews() {
+        self.viewWeather.isHidden = false
+        self.tableViewWeatherForecast.isHidden = false
+    }
+    
+    func hideViews() {
+        self.viewWeather.isHidden = true
+        self.tableViewWeatherForecast.isHidden = true
+    }
+    
 //    MARK - UITextFieldDelegate Function
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
+    
+
     
 
 }

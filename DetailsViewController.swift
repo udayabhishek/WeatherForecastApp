@@ -18,11 +18,15 @@ class DetailsViewController : UIViewController, UITableViewDataSource {
     @IBOutlet weak var labelWindSpeed: UILabel!
     @IBOutlet weak var labelWindDegree: UILabel!
     @IBOutlet weak var tableViewTeperatureDetails: UITableView!
+
+    
     let baseURLForIcon = "http://openweathermap.org/img/w/"
+    
     override func viewDidLoad() {
         view.backgroundColor = UIColor.init(patternImage: UIImage.init(named: "backgroundImage.png")!)
         updateUI()
     }
+    
     
     func updateUI(){
         let valueHumidity =  String(describing: forecastDetails[0]["humidity"]!)
@@ -47,10 +51,7 @@ class DetailsViewController : UIViewController, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        
         let rowNumber = indexPath.row
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellTemperatureDetails", for: indexPath) as! TemperatureDetailsCell
         let iconName = String(describing: forecastDetails[rowNumber]["iconName"]!)
         let url = "\(baseURLForIcon)\(iconName).png"

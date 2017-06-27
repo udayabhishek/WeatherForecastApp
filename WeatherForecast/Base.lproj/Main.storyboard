@@ -235,7 +235,9 @@
                         <outlet property="cityNameSearchTextField" destination="rYv-qC-kSP" id="Noz-yd-wTu"/>
                         <outlet property="labelCityName" destination="2bS-iM-7ZW" id="Jih-bi-ZKu"/>
                         <outlet property="labelTemperature" destination="ufL-w3-iqC" id="XjO-uO-ATQ"/>
+                        <outlet property="segmentControl" destination="Ktj-58-Nva" id="Qfs-Kv-Pr1"/>
                         <outlet property="tableViewWeatherForecast" destination="OO6-Gm-Ozj" id="tBj-KT-LXi"/>
+                        <outlet property="viewWeather" destination="SRa-gC-eLw" id="IwR-nh-XEC"/>
                         <segue destination="e3A-2z-jcw" kind="show" identifier="segueDetailsView" id="aHW-YA-TDM"/>
                     </connections>
                 </viewController>
@@ -505,9 +507,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="79R-SW-uiQ" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="375" height="667"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="kiM-Mn-aEN">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="kiM-Mn-aEN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
