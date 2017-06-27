@@ -42,11 +42,9 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
 
         let cityName = cityNameSearchTextField.text
         if cityName != nil{
-//            labelCityName.text = cityName!
-            //            metric is as default
+            //          metric is as default
             let feed = getJSONData(cityName: cityName!, units: "metric")
             if feed == true{
-//                self.viewWeather.isHidden = false
             }else{
                 alert(title: "oops", message: "You missed the city name")
             }
@@ -101,11 +99,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
             switch response.result
             {
                 case .success(let value):
-//                    self.day0 = [[:]]
-//                    self.day1 = [[:]]
-//                    self.day2 = [[:]]
-//                    self.day3 = [[:]]
-//                    self.day4 = [[:]]
+
                     let json = JSON(value)
                     let date = Date()
                     let dateFormatter = DateFormatter()
