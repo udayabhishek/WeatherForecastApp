@@ -39,11 +39,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
     
 //    MARK: - User Input
     @IBAction func SearchButton(_ sender: Any) {
-//                        day0 = [[:]]//Today
-//                        day1 = [[:]]
-//                        day2 = [[:]]
-//                        day3 = [[:]]
-//                        day4 = [[:]]
+
         let cityName = cityNameSearchTextField.text
         if cityName != nil{
 //            labelCityName.text = cityName!
@@ -62,11 +58,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
     
     
     @IBAction func segmentToggleBetweenCAndF(_ sender: UISegmentedControl) {
-        //        day0 = [[:]]//Today
-        //        day1 = [[:]]
-        //        day2 = [[:]]
-        //        day3 = [[:]]
-        //        day4 = [[:]]
+  
         let cityName = cityNameSearchTextField.text!
         if cityName.isEmpty{
             hideViews()
