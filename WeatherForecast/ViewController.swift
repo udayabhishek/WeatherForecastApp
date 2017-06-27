@@ -39,6 +39,11 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
     
 //    MARK: - User Input
     @IBAction func SearchButton(_ sender: Any) {
+                day0 = [[String: Any]]()//Today
+                day1 = [[String: Any]]()
+                day2 = [[String: Any]]()
+                day3 = [[String: Any]]()
+                day4 = [[String: Any]]()
 
         let cityName = cityNameSearchTextField.text
         if cityName != nil{
