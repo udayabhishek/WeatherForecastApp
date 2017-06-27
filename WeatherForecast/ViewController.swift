@@ -32,7 +32,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
         
         super.viewDidLoad()
         hideViews()
-        segmentControl.isHidden = true
         view.backgroundColor = UIColor.init(patternImage: UIImage.init(named: "backgroundImage.png")!)
         activityIndicator.isHidden = true
     }
@@ -61,7 +60,11 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
     
     
     @IBAction func segmentToggleBetweenCAndF(_ sender: UISegmentedControl) {
-  
+        day0 = [[String: Any]]()//Today
+        day1 = [[String: Any]]()
+        day2 = [[String: Any]]()
+        day3 = [[String: Any]]()
+        day4 = [[String: Any]]()
         let cityName = cityNameSearchTextField.text!
         if cityName.isEmpty{
             hideViews()
@@ -276,7 +279,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDataSour
 //    MARK: - UITableViewDataSource method
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        forecastDetails = [[:]]
+        forecastDetails = [[String:Any]]()
         let rowNumber = indexPath.row
         
         if rowNumber == 0{
